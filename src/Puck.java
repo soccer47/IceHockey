@@ -16,6 +16,7 @@ public class Puck {
     private static final int GOAL_Y = 440;
     private static final int GOAL_WIDTH = 175;
     private static final Color shade = Color.BLACK;
+    private static final double EXIT_C = 25.0;
 
     // Constructor
     public Puck() {
@@ -65,29 +66,17 @@ public class Puck {
         // Check for an x bounce
         double xDif = playerX - x;
         double yDif = playerY - y;
-        int distance = (int) Math.sqrt(xDif * xDif + yDif * yDif);
+        double distance = Math.sqrt(xDif * xDif + yDif * yDif);
 
-        double origDx = dx;
-        double origDy = dy;
-        int collisionAngle = (int)(Math.tanh(dy / dx));
 
-        if (distance < radius + playerWidth + 20 && distance > radius + playerWidth - 25) {
-            if (true) {
+        if (distance < radius + playerWidth + 10 && distance > radius + playerWidth - 15) {
+            System.out.print("collision detected\n");
 
-            }
-            else if (x < playerX && y < playerY) {
-
-            }
-            else if (x < playerX && y > playerY) {
-
-            }
-            else {
-
-            }
-
+            double collisionAngle = (Math.tanh(dy / dx));
+            double exitAngle = (Math.PI / 2 - collisionAngle);
+            dx = Math.cos(exitAngle) * EXIT_C;
+            dy = Math.sin(-exitAngle) * EXIT_C;
         }
-
-
     }
     public void move() {
         x += dx;
