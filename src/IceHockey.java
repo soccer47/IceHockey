@@ -15,6 +15,7 @@ public class IceHockey implements ActionListener, KeyListener {
     private Player P1;
     private Player P2;
     private IceHockeyViewer window;
+    private boolean isSoccer;
     private int gameStage;
 
     private static final int MAX_WIDTH = 1240;
@@ -37,9 +38,10 @@ public class IceHockey implements ActionListener, KeyListener {
 
     // Constructor
     public IceHockey() {
-        p = new Puck();
-        P1 = new Player("Player 1", PLAYER_ONE_X, PLAYER_Y, Color.RED, true);
-        P2 = new Player("Player 2", PLAYER_TWO_X, PLAYER_Y,Color.BLUE, false);
+        p = new Puck(false);
+        P1 = new Player("Player 1", PLAYER_ONE_X, PLAYER_Y, Color.RED, Color.CYAN,true, 7);
+        P2 = new Player("Player 2", PLAYER_TWO_X, PLAYER_Y,Color.BLUE, Color.MAGENTA,false, 8);
+        isSoccer = false;
         gameStage = 0;
         window = new IceHockeyViewer(this);
 
@@ -59,6 +61,9 @@ public class IceHockey implements ActionListener, KeyListener {
 
     public int getGameStage() {
         return gameStage;
+    }
+    public boolean getIsSoccer() {
+        return isSoccer;
     }
     public void gameCheck() {
         if (P1.getScore() >= 3 || P2.getScore() >= 3) {
@@ -110,6 +115,27 @@ public class IceHockey implements ActionListener, KeyListener {
                 p.setDy(-20);
             }
             else if (gameStage == 0){
+                gameStage = 1;
+            }
+        }
+        if (keyCode == KeyEvent.VK_1)
+        {
+            if (gameStage == 2) {
+                return;
+            }
+            else if (gameStage == 1 || gameStage == 3){
+                isSoccer = true;
+                p.setIsSoccer(true);
+                gameStage = 2;
+                P1.setScore(0);
+                P2.setScore(0);
+                p.resetPuck();
+                p.setDx(-20);
+                p.setDy(-20);
+            }
+            else if (gameStage == 0){
+                isSoccer = true;
+                p.setIsSoccer(true);
                 gameStage = 1;
             }
         }

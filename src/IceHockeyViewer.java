@@ -11,12 +11,16 @@ public class IceHockeyViewer extends JFrame {
     private Puck thePuck;
     private IceHockey game;
     private boolean gameOver;
+    private boolean isSoccerGame;
 
     private static final Image homeScreen = new ImageIcon("Resources/screen1.png").getImage();
     private static final Image instructions = new ImageIcon("Resources/instructions.png").getImage();
     private static final Image gameBackground = new ImageIcon("Resources/game.png").getImage();
+    private static final Image soccerBackground = new ImageIcon("Resources/soccer.png").getImage();
     private static final Image oneWins = new ImageIcon("Resources/p1wins.png").getImage();
     private static final Image twoWins = new ImageIcon("Resources/p2wins.png").getImage();
+    private static final Image oneWinsSoc = new ImageIcon("Resources/p1winsSoc.png").getImage();
+    private static final Image twoWinsSoc = new ImageIcon("Resources/p2winsSoc.png").getImage();
 
     private static final int MAX_WIDTH = 1250;
     private static final int MAX_HEIGHT = 920;
@@ -32,6 +36,7 @@ public class IceHockeyViewer extends JFrame {
         thePuck = ih.getPuck();
         game = ih;
         gameOver = false;
+        isSoccerGame = ih.getIsSoccer();
 
         this.setTitle("Macbook AIR HOCKEY");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -57,6 +62,7 @@ public class IceHockeyViewer extends JFrame {
     }
 
     public void myPaint(Graphics g) {
+        isSoccerGame = game.getIsSoccer();
 
         if (game.getGameStage() == 0) {
             g.drawImage(homeScreen, 0, 0, MAX_WIDTH, MAX_HEIGHT, this);
@@ -72,29 +78,51 @@ public class IceHockeyViewer extends JFrame {
         // Clear window
         g.setColor(Color.black);
         g.fillRect(0, 0, MAX_WIDTH, MAX_HEIGHT);
-        g.drawImage(gameBackground, 0, 0, MAX_WIDTH, MAX_HEIGHT, this);
+        if (!isSoccerGame) {
+            g.drawImage(gameBackground, 0, 0, MAX_WIDTH, MAX_HEIGHT, this);
+        }
+        else {
+            g.drawImage(soccerBackground, 0, 0, MAX_WIDTH, MAX_HEIGHT, this);
+        }
 
 
-        thePuck.wallBounce(20, MAX_WIDTH - 10, SCOREBOARD_HEIGHT - 5, MAX_HEIGHT - 40);
+
+        thePuck.wallBounce(20, MAX_WIDTH - 10, SCOREBOARD_HEIGHT - 5, MAX_HEIGHT - 50);
         thePuck.playerBounce(playerOne.getX(), playerOne.getY(), playerOne.getWidth());
         thePuck.playerBounce(playerTwo.getX(), playerTwo.getY(), playerTwo.getWidth());
         thePuck.move();
 
-        thePuck.draw(g);
+        thePuck.playerBounce(playerOne.getX(), playerOne.getY(), playerOne.getWidth());
+        thePuck.playerBounce(playerTwo.getX(), playerTwo.getY(), playerTwo.getWidth());
+
+        thePuck.draw(g, this);
         playerOne.drawPlayer(g);
         playerTwo.drawPlayer(g);
+
+        thePuck.playerBounce(playerOne.getX(), playerOne.getY(), playerOne.getWidth());
+        thePuck.playerBounce(playerTwo.getX(), playerTwo.getY(), playerTwo.getWidth());
 
         game.scoreCheck();
 
          if (game.getGameStage() == 3) {
             if (playerOne.getScore() >= 3) {
-                g.drawImage(oneWins, 0, 0, MAX_WIDTH, MAX_HEIGHT, this);
+                if (isSoccerGame) {
+                    g.drawImage(oneWinsSoc, 0, 0, MAX_WIDTH, MAX_HEIGHT, this);
+                }
+                else {
+                    g.drawImage(oneWins, 0, 0, MAX_WIDTH, MAX_HEIGHT, this);
+                }
                 thePuck.setDx(0);
                 thePuck.setDy(0);
                 gameOver = true;
             }
             else {
-                g.drawImage(twoWins, 0, 0, MAX_WIDTH, MAX_HEIGHT, this);
+                if (isSoccerGame) {
+                    g.drawImage(twoWinsSoc, 0, 0, MAX_WIDTH, MAX_HEIGHT, this);
+                }
+                else {
+                    g.drawImage(twoWins, 0, 0, MAX_WIDTH, MAX_HEIGHT, this);
+                }
                 gameOver = true;
             }
 
