@@ -1,4 +1,6 @@
+import javax.swing.*;
 import java.awt.*;
+import java.awt.image.ImageObserver;
 import java.util.ArrayList;
 
 // Stevie K. Halprin
@@ -10,21 +12,26 @@ public class Puck {
     private double dx;
     private double dy;
     private int radius;
+    private double distance;
+    private boolean isSoccer;
     private static final int MAX_WIDTH = 1240;
     private static final int CENTER_X = 623;
     private static final int CENTER_Y = 529;
     private static final int GOAL_Y = 440;
     private static final int GOAL_WIDTH = 175;
     private static final Color shade = Color.BLACK;
-    private static final double EXIT_C = 25.0;
+    private static final Image ball = new ImageIcon("Resources/soccerBall.png").getImage();
+
+    private static final double EXIT_C = 100.0;
 
     // Constructor
-    public Puck() {
+    public Puck(boolean isSoccerBall) {
         x = CENTER_X;
         y = CENTER_Y;
-        dx = -20;
-        dy = -20;
-        radius = 25;
+        isSoccer = isSoccerBall;
+        dx = -10;
+        dy = -10;
+        radius = 30;
     }
 
     // Getters and setters
@@ -46,6 +53,9 @@ public class Puck {
     public void setDy(int newDy) {
         dy = newDy;
     }
+    public void setIsSoccer(boolean isSoc) {
+        isSoccer = isSoc;
+    }
 
     public void wallBounce(int xLow, int xHigh, int yLow, int yHigh) {
         // Check for a y bounce
@@ -66,16 +76,16 @@ public class Puck {
         // Check for an x bounce
         double xDif = playerX - x;
         double yDif = playerY - y;
-        double distance = Math.sqrt(xDif * xDif + yDif * yDif);
+        distance = Math.sqrt(xDif * xDif + yDif * yDif);
 
+        if (distance < radius + playerWidth + 9 && distance > radius + playerWidth - 7) {
+            dx = Math.random() * EXIT_C - EXIT_C / 2 + 1;
+            dy = Math.random() * EXIT_C - EXIT_C / 2 + 1;
 
-        if (distance < radius + playerWidth + 10 && distance > radius + playerWidth - 15) {
-            System.out.print("collision detected\n");
-
-            double collisionAngle = (Math.tanh(dy / dx));
-            double exitAngle = (Math.PI / 2 - collisionAngle);
-            dx = Math.cos(exitAngle) * EXIT_C;
-            dy = Math.sin(-exitAngle) * EXIT_C;
+//            double collisionAngle = (Math.tanh(dy / dx));
+//            double exitAngle = (Math.PI / 2 - collisionAngle);
+//            dx = -Math.cos(exitAngle) * EXIT_C;
+//            dy = Math.sin(-exitAngle) * EXIT_C;
         }
     }
     public void move() {
@@ -88,8 +98,13 @@ public class Puck {
         y = CENTER_Y;
     }
 
-    public void draw(Graphics g) {
-        g.setColor(shade);
-        g.fillOval((int)x - radius, (int)y - radius, 2 * radius, 2 * radius);
+    public void draw(Graphics g, ImageObserver backEnd) {
+        if (!isSoccer) {
+            g.setColor(shade);
+            g.fillOval((int)x - radius, (int)y - radius, 2 * radius, 2 * radius);
+        }
+        else {
+            g.drawImage(ball, (int)x - radius, (int)y - radius, radius * 2, radius * 2, backEnd);
+        }
     }
 }
