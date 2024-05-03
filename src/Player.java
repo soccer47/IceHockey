@@ -1,6 +1,8 @@
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.image.ImageObserver;
 
 // Stevie K. Halprin
 // 4/7/2024
@@ -12,19 +14,24 @@ public class Player {
     private int width;
     private int score;
     private Color kit;
+    private Color kit2;
     private boolean isP1;
+    private int number;
     private int step;
+    private boolean isSoccer;
 
     // Constructor
-    public Player (String name, int x, int y, Color kit, boolean isP1) {
+    public Player (String name, int x, int y, Color kit, Color kit2, boolean isP1, int number) {
         this.name = name;
         this.width = 90;
         this.score = -1;
         this.x = x;
         this.y = y;
         this.kit = kit;
+        this.kit2 = kit2;
         this.isP1 = isP1;
         step = 65;
+        this.number = number;
     }
 
     // Getters and Setters
@@ -118,6 +125,14 @@ public class Player {
     public void drawPlayer(Graphics g) {
         g.setColor(kit);
         g.fillOval(x - width/2, y - width/2, width, width);
+
+        g.setColor(kit2);
+        g.drawOval(x - width/2, y - width/2, width, width);
+        g.setFont(new Font("bold", Font.HANGING_BASELINE, 75));
+        g.drawString("" + number, x - width/3, y + width/3);
+    }
+    public void drawSoccerPlayer(Graphics g, Image player, ImageObserver backEnd) {
+        g.drawImage(player, x - width/2, y - width/2, width, width, backEnd);
     }
 
 }

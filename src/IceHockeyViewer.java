@@ -21,6 +21,8 @@ public class IceHockeyViewer extends JFrame {
     private static final Image twoWins = new ImageIcon("Resources/p2wins.png").getImage();
     private static final Image oneWinsSoc = new ImageIcon("Resources/p1winsSoc.png").getImage();
     private static final Image twoWinsSoc = new ImageIcon("Resources/p2winsSoc.png").getImage();
+    private static final Image ronaldo = new ImageIcon("Resources/ronaldo.png").getImage();
+    private static final Image messi = new ImageIcon("Resources/messi.png").getImage();
 
     private static final int MAX_WIDTH = 1250;
     private static final int MAX_HEIGHT = 920;
@@ -64,6 +66,9 @@ public class IceHockeyViewer extends JFrame {
     public void myPaint(Graphics g) {
         isSoccerGame = game.getIsSoccer();
 
+        thePuck.playerBounce(playerOne.getX(), playerOne.getY(), playerOne.getWidth(), true);
+        thePuck.playerBounce(playerTwo.getX(), playerTwo.getY(), playerTwo.getWidth(), false);
+
         if (game.getGameStage() == 0) {
             g.drawImage(homeScreen, 0, 0, MAX_WIDTH, MAX_HEIGHT, this);
             playerOne.setScore(0);
@@ -75,6 +80,9 @@ public class IceHockeyViewer extends JFrame {
             return;
         }
 
+        thePuck.playerBounce(playerOne.getX(), playerOne.getY(), playerOne.getWidth(), true);
+        thePuck.playerBounce(playerTwo.getX(), playerTwo.getY(), playerTwo.getWidth(), false);
+
         // Clear window
         g.setColor(Color.black);
         g.fillRect(0, 0, MAX_WIDTH, MAX_HEIGHT);
@@ -85,22 +93,29 @@ public class IceHockeyViewer extends JFrame {
             g.drawImage(soccerBackground, 0, 0, MAX_WIDTH, MAX_HEIGHT, this);
         }
 
-
+        thePuck.playerBounce(playerOne.getX(), playerOne.getY(), playerOne.getWidth(), true);
+        thePuck.playerBounce(playerTwo.getX(), playerTwo.getY(), playerTwo.getWidth(), false);
 
         thePuck.wallBounce(20, MAX_WIDTH - 10, SCOREBOARD_HEIGHT - 5, MAX_HEIGHT - 50);
-        thePuck.playerBounce(playerOne.getX(), playerOne.getY(), playerOne.getWidth());
-        thePuck.playerBounce(playerTwo.getX(), playerTwo.getY(), playerTwo.getWidth());
+        thePuck.playerBounce(playerOne.getX(), playerOne.getY(), playerOne.getWidth(), true);
+        thePuck.playerBounce(playerTwo.getX(), playerTwo.getY(), playerTwo.getWidth(), false);
         thePuck.move();
 
-        thePuck.playerBounce(playerOne.getX(), playerOne.getY(), playerOne.getWidth());
-        thePuck.playerBounce(playerTwo.getX(), playerTwo.getY(), playerTwo.getWidth());
+        thePuck.playerBounce(playerOne.getX(), playerOne.getY(), playerOne.getWidth(), true);
+        thePuck.playerBounce(playerTwo.getX(), playerTwo.getY(), playerTwo.getWidth(), false);
 
         thePuck.draw(g, this);
-        playerOne.drawPlayer(g);
-        playerTwo.drawPlayer(g);
+        if (isSoccerGame) {
+            playerOne.drawSoccerPlayer(g, ronaldo, this);
+            playerTwo.drawSoccerPlayer(g, messi, this);
+        }
+        else {
+            playerOne.drawPlayer(g);
+            playerTwo.drawPlayer(g);
+        }
 
-        thePuck.playerBounce(playerOne.getX(), playerOne.getY(), playerOne.getWidth());
-        thePuck.playerBounce(playerTwo.getX(), playerTwo.getY(), playerTwo.getWidth());
+        thePuck.playerBounce(playerOne.getX(), playerOne.getY(), playerOne.getWidth(), true);
+        thePuck.playerBounce(playerTwo.getX(), playerTwo.getY(), playerTwo.getWidth(), false);
 
         game.scoreCheck();
 
@@ -125,6 +140,8 @@ public class IceHockeyViewer extends JFrame {
                 }
                 gameOver = true;
             }
+             thePuck.playerBounce(playerOne.getX(), playerOne.getY(), playerOne.getWidth(), true);
+             thePuck.playerBounce(playerTwo.getX(), playerTwo.getY(), playerTwo.getWidth(), false);
 
         }
 

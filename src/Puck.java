@@ -72,15 +72,22 @@ public class Puck {
         }
     }
 
-    public void playerBounce(int playerX, int playerY, int playerWidth) {
+    public void playerBounce(int playerX, int playerY, int playerWidth, boolean isP1) {
         // Check for an x bounce
         double xDif = playerX - x;
         double yDif = playerY - y;
         distance = Math.sqrt(xDif * xDif + yDif * yDif);
 
-        if (distance < radius + playerWidth + 9 && distance > radius + playerWidth - 7) {
+        if (distance < radius + playerWidth + 10 && distance > radius + playerWidth - 8) {
             dx = Math.random() * EXIT_C - EXIT_C / 2 + 1;
             dy = Math.random() * EXIT_C - EXIT_C / 2 + 1;
+
+            if (isP1) {
+                dx = Math.abs(dx);
+            }
+            else {
+                dx = -Math.abs(dx);
+            }
 
 //            double collisionAngle = (Math.tanh(dy / dx));
 //            double exitAngle = (Math.PI / 2 - collisionAngle);
