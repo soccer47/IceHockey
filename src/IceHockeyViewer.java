@@ -11,8 +11,10 @@ public class IceHockeyViewer extends JFrame {
     private Puck thePuck;
     private IceHockey game;
     private boolean gameOver;
+    private static final int WIN_SCORE = 2;
     private boolean isSoccerGame;
 
+    // Sets the backgrounds to image variables
     private static final Image homeScreen = new ImageIcon("Resources/screen1.png").getImage();
     private static final Image instructions = new ImageIcon("Resources/instructions.png").getImage();
     private static final Image gameBackground = new ImageIcon("Resources/game.png").getImage();
@@ -24,15 +26,15 @@ public class IceHockeyViewer extends JFrame {
     private static final Image ronaldo = new ImageIcon("Resources/ronaldo.png").getImage();
     private static final Image messi = new ImageIcon("Resources/messi.png").getImage();
 
+    // Constants for location on screen
     private static final int MAX_WIDTH = 1250;
     private static final int MAX_HEIGHT = 920;
-    private static final int TOP_OF_WINDOW = 20;
     private static final int SCOREBOARD_HEIGHT = 190;
-    private static final int GOAL_Y = 445;
-    private static final int GOAL_WIDTH = 210;
 
     // Constructor
     public IceHockeyViewer(IceHockey ih) {
+        // Gets player and puck object from game parameter
+        // Sets the game to the game parameter
         playerOne = ih.getP1();
         playerTwo = ih.getP2();
         thePuck = ih.getPuck();
@@ -40,6 +42,7 @@ public class IceHockeyViewer extends JFrame {
         gameOver = false;
         isSoccerGame = ih.getIsSoccer();
 
+        // Window variables
         this.setTitle("Macbook AIR HOCKEY");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setSize(MAX_WIDTH, MAX_HEIGHT);
@@ -47,6 +50,7 @@ public class IceHockeyViewer extends JFrame {
         createBufferStrategy(2);
     }
 
+    // Paint method, calls myPaint method to repaint the window
     public void paint (Graphics g) {
         BufferStrategy bf = this.getBufferStrategy();
         if (bf == null)
@@ -63,23 +67,28 @@ public class IceHockeyViewer extends JFrame {
         Toolkit.getDefaultToolkit().sync();
     }
 
+    // Repaints the window
     public void myPaint(Graphics g) {
         isSoccerGame = game.getIsSoccer();
 
+        // Checks if the puck should bounce off of a player, puck bounces if so
         thePuck.playerBounce(playerOne.getX(), playerOne.getY(), playerOne.getWidth(), true);
         thePuck.playerBounce(playerTwo.getX(), playerTwo.getY(), playerTwo.getWidth(), false);
 
+        // If the gameStage is in the first stage, output home screen
         if (game.getGameStage() == 0) {
             g.drawImage(homeScreen, 0, 0, MAX_WIDTH, MAX_HEIGHT, this);
             playerOne.setScore(0);
             playerTwo.setScore(0);
             return;
         }
+        // If the gameStage is in the second stage, output instructions screen
         else if (game.getGameStage() == 1) {
             g.drawImage(instructions, 0, 0, MAX_WIDTH, MAX_HEIGHT, this);
             return;
         }
 
+        // Checks for puck bounce off of player
         thePuck.playerBounce(playerOne.getX(), playerOne.getY(), playerOne.getWidth(), true);
         thePuck.playerBounce(playerTwo.getX(), playerTwo.getY(), playerTwo.getWidth(), false);
 
@@ -93,9 +102,11 @@ public class IceHockeyViewer extends JFrame {
             g.drawImage(soccerBackground, 0, 0, MAX_WIDTH, MAX_HEIGHT, this);
         }
 
+        // Checks for puck bounce off of player
         thePuck.playerBounce(playerOne.getX(), playerOne.getY(), playerOne.getWidth(), true);
         thePuck.playerBounce(playerTwo.getX(), playerTwo.getY(), playerTwo.getWidth(), false);
 
+        // Checks for puck bounce off player, moves puck, checks for puck wall bounce
         thePuck.wallBounce(20, MAX_WIDTH - 10, SCOREBOARD_HEIGHT - 5, MAX_HEIGHT - 50);
         thePuck.playerBounce(playerOne.getX(), playerOne.getY(), playerOne.getWidth(), true);
         thePuck.playerBounce(playerTwo.getX(), playerTwo.getY(), playerTwo.getWidth(), false);
@@ -104,6 +115,7 @@ public class IceHockeyViewer extends JFrame {
         thePuck.playerBounce(playerOne.getX(), playerOne.getY(), playerOne.getWidth(), true);
         thePuck.playerBounce(playerTwo.getX(), playerTwo.getY(), playerTwo.getWidth(), false);
 
+        // Draws the puck and players, images depend on if game is soccer of hockey mode
         thePuck.draw(g, this);
         if (isSoccerGame) {
             playerOne.drawSoccerPlayer(g, ronaldo, this);
@@ -117,10 +129,12 @@ public class IceHockeyViewer extends JFrame {
         thePuck.playerBounce(playerOne.getX(), playerOne.getY(), playerOne.getWidth(), true);
         thePuck.playerBounce(playerTwo.getX(), playerTwo.getY(), playerTwo.getWidth(), false);
 
+        // Checks to see if the game is won yet or not
         game.scoreCheck();
 
+        // If the game is won, output the winscreen for the winning player
          if (game.getGameStage() == 3) {
-            if (playerOne.getScore() >= 3) {
+            if (playerOne.getScore() >= WIN_SCORE) {
                 if (isSoccerGame) {
                     g.drawImage(oneWinsSoc, 0, 0, MAX_WIDTH, MAX_HEIGHT, this);
                 }
@@ -145,6 +159,7 @@ public class IceHockeyViewer extends JFrame {
 
         }
 
+         // Prints out the updated score on the screen
         g.setColor(Color.BLACK);
         g.setFont(new Font("bold", Font.BOLD, 95));
         g.drawString("" + playerOne.getScore(), 522, 110);

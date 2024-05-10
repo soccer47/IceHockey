@@ -14,15 +14,19 @@ public class Puck {
     private int radius;
     private double distance;
     private boolean isSoccer;
+
+    // Constants based on locations on screen
     private static final int MAX_WIDTH = 1240;
     private static final int CENTER_X = 623;
     private static final int CENTER_Y = 529;
     private static final int GOAL_Y = 440;
     private static final int GOAL_WIDTH = 175;
+
+    // Instance variables for the puck (or ball) being drawn on the screen
     private static final Color shade = Color.BLACK;
     private static final Image ball = new ImageIcon("Resources/soccerBall.png").getImage();
 
-    private static final double EXIT_C = 100.0;
+    private static final double EXIT_C = 55.0;
 
     // Constructor
     public Puck(boolean isSoccerBall) {
@@ -57,6 +61,8 @@ public class Puck {
         isSoccer = isSoc;
     }
 
+
+    // Checks to see if the puck is in contact with the wall, if so then bounce in the opposite direction
     public void wallBounce(int xLow, int xHigh, int yLow, int yHigh) {
         // Check for a y bounce
         if ((y - radius <= yLow && dy < 0) || (y + radius >= yHigh && dy > 0)) {
@@ -72,12 +78,15 @@ public class Puck {
         }
     }
 
+    // Checks if the puck has collided with a player
     public void playerBounce(int playerX, int playerY, int playerWidth, boolean isP1) {
         // Check for an x bounce
         double xDif = playerX - x;
         double yDif = playerY - y;
         distance = Math.sqrt(xDif * xDif + yDif * yDif);
 
+        // If the distance is within the player radius, then bounce toward the goal of the opposing player
+        // Puck will deflect in random direction with random speed in this direction
         if (distance < radius + playerWidth + 10 && distance > radius + playerWidth - 8) {
             dx = Math.random() * EXIT_C - EXIT_C / 2 + 1;
             dy = Math.random() * EXIT_C - EXIT_C / 2 + 1;
@@ -88,23 +97,23 @@ public class Puck {
             else {
                 dx = -Math.abs(dx);
             }
-
-//            double collisionAngle = (Math.tanh(dy / dx));
-//            double exitAngle = (Math.PI / 2 - collisionAngle);
-//            dx = -Math.cos(exitAngle) * EXIT_C;
-//            dy = Math.sin(-exitAngle) * EXIT_C;
         }
     }
+
+    // Updates the position of the puck
     public void move() {
         x += dx;
         y += dy;
     }
 
+    // Resets the puck to the center of the screen
     public void resetPuck() {
         x = CENTER_X;
         y = CENTER_Y;
     }
 
+    // Draws the puck on the screen
+    // Draws a black circle if in hockey mode, draws a soccer ball if in soccer mode
     public void draw(Graphics g, ImageObserver backEnd) {
         if (!isSoccer) {
             g.setColor(shade);

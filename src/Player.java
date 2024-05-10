@@ -63,6 +63,8 @@ public class Player {
         this.y = newY;
     }
 
+    // Changes the position of the player based on the user input
+    // Player 1 uses WASD, 2 uses arrow keys
     public void keyPressed(KeyEvent e)
     {
         int keyCode = e.getKeyCode();
@@ -122,6 +124,8 @@ public class Player {
         }
     }
 
+    // Draws the player on the screen
+    // If mode is hockey mode, draws a circle with a number
     public void drawPlayer(Graphics g) {
         g.setColor(kit);
         g.fillOval(x - width/2, y - width/2, width, width);
@@ -131,6 +135,7 @@ public class Player {
         g.setFont(new Font("bold", Font.HANGING_BASELINE, 75));
         g.drawString("" + number, x - width/3, y + width/3);
     }
+    // If the mode is the soccer mode, draws messi or ronaldo instead of hockey circles
     public void drawSoccerPlayer(Graphics g, Image player, ImageObserver backEnd) {
         g.drawImage(player, x - width/2, y - width/2, width, width, backEnd);
     }
